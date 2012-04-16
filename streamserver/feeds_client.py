@@ -1,6 +1,8 @@
-class FeedsClient:
+from echo_client import EchoClient
+
+class FeedsClient(EchoClient):
 	def list(self):
-		pass
+		return self.execute_query('feeds/list', {})
 	
 	def register(self):
 		pass

@@ -1,9 +1,11 @@
-class UsersClient:
+from echo_client import EchoClient
+
+class UsersClient(EchoClient):
 	def get(self, identityURL):
-		pass
+		return self.execute_query('users/get', {'identityURL':identityURL})
 	
 	def update(self, identityURL, subject, content):
-		pass
+		return self.execute_update('users/update', {'identityURL':identityURL, 'subject':subject, 'content':str(content)})
 		
 	def whoami(self, sessionID):
-		pass
+		return self.execute_query('users/whoami', {'sessionID':sessionID})
