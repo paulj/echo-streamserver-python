@@ -16,6 +16,7 @@ class EchoClient:
 	def __init__(self, auth = EchoAuthConfig(), host = "https://api.echoenabled.com/v1"):
 		self.auth = auth
 		self.host = host
+		self.oauth_hook = False
 		
 		if self.auth.method == EchoAuthMethod.OAUTH:
 			self.oauth_hook = OAuthHook(consumer_key = self.auth.appkey, consumer_secret = self.auth.secret, header_auth = False)
