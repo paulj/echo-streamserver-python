@@ -15,47 +15,103 @@ class QueryBuilderBase:
 			self.terms.append(term)
 		else:
 			self.terms.append(term + ":" + str(value))
+		return self
+	
+	def add_terms(self, term, values):
+		return self.add_term(term, ",".join(values))
 	
 	def __str__(self):
 		return string.join(self.terms, " ")
+
+class CommonQueryOperations:
+	def state(self, *states):
+		return self.add_terms("state", states)
 	
-class MainQueryBuilder(QueryBuilderBase):
+	def type(self, *types):
+		return self.add_terms("type", states)
+	
+	def source(self, *sources):
+		return self.add_terms("source", sources)
+	
+	def provider(self, *providers):
+		return self.add_terms("provider", providers)
+	
+	def tags(self, *tags):
+		return self.add_terms("tags", tags)
+	
+	def markers(self, *markers):
+		return self.add_terms("markers", markers)
+	
+	def user_id(self, userid):
+		return self.add_term("user.id", userid)
+
+	def user_markers(self, *markers):
+		return self.add_terms("user.markers", markers)
+
+	def user_roles(self, *roles):
+		return self.add_terms("user.roles", roles)
+
+	def user_state(self, *states):
+		return self.add_terms("user.state", states)
+	
+class RootQueryBuilder(QueryBuilderBase, CommonQueryOperations):
 	def __init__(self):
 		QueryBuilderBase.__init__(self)
-		
+	
 	def scope(self, s):
-		self.add_term("scope", s)
-		return self
-		
+		return self.add_term("scope", s)
+
 	def childrenof(self, s):
-		self.add_term("childrenof", s)
-		return self
+		return self.add_term("childrenof", s)
+
+	def url(self, s):
+		return self.add_term("url", s)
+	
+	def or_terms(self, *terms):
+		return self.add_term(" OR ".join(map(lambda t: "(" + str(t) + ")", terms)))
+	
+class MainQueryBuilder(RootQueryBuilder):
+	def __init__(self):
+		RootQueryBuilder.__init__(self)
 		
 	def children(self, count=None):
-		self.add_term("children", count)
-		return ChildrenQueryBuilder(str(self))
+		return self.add_term("children", count)
 		
-	def or_terms(self, *terms):
-		self.add_term(" OR ".join(map(lambda t: "(" + str(t) + ")", terms)))
-		return self
+	def itemsPerPage(self, count):
+		return self.add_term("itemsPerPage", count)
 
-class SubQueryBuilder(QueryBuilderBase):
+	def sortOrder(self, order):
+		return self.add_term("sortOrder", order)
+
+	def after(self, ts):
+		return self.add_term("after", ts)
+
+	def before(self, ts):
+		return self.add_term("before", ts)
+
+	def pageAfter(self, ts):
+		return self.add_term("pageAfter", '"' + ts + '"')
+
+	def safeHTML(self, mode):
+		return self.add_term("safeHTML", mode)
+		
+class SubQueryBuilder(RootQueryBuilder):
 	def __init__(self):
-		QueryBuilderBase.__init__(self)
+		RootQueryBuilder.__init__(self)
 		
-	def scope(self, s):
-		self.add_term("scope", s)
-		return self
-		
-class ChildrenQueryBuilder(QueryBuilderBase):
+class ChildrenQueryBuilder(QueryBuilderBase, CommonQueryOperations):
 	def __init__(self, prefix):
 		QueryBuilderBase.__init__(self)
 		
 		self.prefix = prefix
 		
-	def itemsPerPage(self, count):
-		self.add_term("itemsPerPage", count)
-		return self
+	def childrenItemsPerPage(self, count):
+		return self.add_term("childrenItemsPerPage", count)
+
+	def childrenSortOrder(self, order):
+		return self.add_term("childrenSortOrder", order)
+
+
 		
 	def __str__(self):
 		return self.prefix + " " + QueryBuilderBase.__str__(self)
