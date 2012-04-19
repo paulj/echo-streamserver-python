@@ -2,11 +2,15 @@ require 'bundler'
 Bundler.setup
 require 'sinatra'
 require './lib/kvs'
+require './lib/ss'
+require './lib/user'
 require 'oauth'
 require 'oauth/request_proxy/rack_request'
 require 'json'
 
 CURRENT_KVS=KVS.new
+CURRENT_SS=SS.new
+CURRENT_USERS=UserStore.new
 
 set :show_exceptions, false
 # set :dump_errors, false
@@ -37,10 +41,17 @@ before do
   end
 end
 
-get '/v1/search' do 
+get '/v1/search' do
+  require_parameter :q
+  
+  CURRENT_SS.search(params[:appkey], params[:q], params[:since])
+  respond_json({})
 end
 
 get '/v1/count' do
+  require_parameter :q
+  
+  respond_json(:count => CURRENT_SS.count(params[:appkey], params[:q]))
 end
 
 get '/v1/submit' do
@@ -54,8 +65,7 @@ get '/v1/kvs/get' do
   
   v = CURRENT_KVS.get(params[:appkey], params[:key])
   
-  json_header
-  {:value => v}.to_json
+  respond_json(:value => v)
 end
 
 post '/v1/kvs/put' do
@@ -76,8 +86,38 @@ post '/v1/kvs/delete' do
   success_result
 end
 
+get '/v1/users/get' do
+  require_auth
+  generate_error(400, 'identity_url_absent') unless params[:identityURL]
+  
+  respond_json(CURRENT_USERS.get(params[:identityURL]))
+end
+
+get '/v1/users/whoami' do
+  require_parameter :sessionID
+  
+  respond_json(CURRENT_USERS.whoami(params[:sessionID]))
+end
+
+post '/v1/users/update' do
+  require_auth
+  generate_error(400, 'identity_url_absent') unless params[:identityURL]
+  require_parameter :subject, :content
+  
+  CURRENT_USERS.update(params[:identityURL], params[:subject], params[:content])
+  
+  success_result
+end
+
 error KeyNotFoundException do
   generate_error(404, 'not_found')
+end
+error UnknownUserException do
+  generate_error(404, 'not_found')
+end
+error UnknownSessionException do
+  json_header
+  {:result => 'session_not_found'}.to_json
 end
 
 def json_header
@@ -87,6 +127,11 @@ end
 def success_result
   json_header
   {:result => 'success'}.to_json
+end
+
+def respond_json(v)
+  json_header
+  v.to_json
 end
 
 def generate_error(status_code, echo_code, msg = nil)

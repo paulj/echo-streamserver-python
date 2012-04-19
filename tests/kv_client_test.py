@@ -1,22 +1,15 @@
 import unittest
 
 from streamserver import *
+import configuration_factory as cf
 
 class ItemsClientTestSuite(unittest.TestCase):
 	def setUp(self):
-		self.test_host = "http://localhost:4567/v1"
-		
-		self.no_auth = EchoAuthConfig(appkey = "test.echoenabled.com")
-		self.basic_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret123")
-		self.oauth_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret123", method = EchoAuthMethod.OAUTH)
-		self.invalid_basic_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret1234")
-		self.invalid_oauth_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret1234", method = EchoAuthMethod.OAUTH)
-		
-		self.noauth_client = KVClient(auth = self.no_auth, host = self.test_host)
-		self.basic_client = KVClient(auth = self.basic_auth, host = self.test_host)
-		self.oauth_client = KVClient(auth = self.oauth_auth, host = self.test_host)
-		self.invalid_basic_client = KVClient(auth = self.invalid_basic_auth, host = self.test_host)
-		self.invalid_oauth_client = KVClient(auth = self.invalid_oauth_auth, host = self.test_host)
+		self.noauth_client = KVClient(auth = cf.no_auth, host = cf.test_host)
+		self.basic_client = KVClient(auth = cf.basic_auth, host = cf.test_host)
+		self.oauth_client = KVClient(auth = cf.oauth_auth, host = cf.test_host)
+		self.invalid_basic_client = KVClient(auth = cf.invalid_basic_auth, host = cf.test_host)
+		self.invalid_oauth_client = KVClient(auth = cf.invalid_oauth_auth, host = cf.test_host)
 	
 	def test_put_get_basic(self):
 		self.basic_client.put('abc', '123')

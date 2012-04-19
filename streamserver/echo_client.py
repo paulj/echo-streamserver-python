@@ -71,19 +71,22 @@ class EchoClient:
 		else:
 			# Attempt to decode as a JSON response
 			res = self.decode_response(response)
-			if res['errorCode'] == "incorrect_appkey":
-				raise InvalidOrMissingAppKeyException()
-			elif res['errorCode'] == "oauth_consumer_key_absent":
-				raise AuthorisationRequiredException()
-			elif res['errorCode'] == 'oauth_signature_mismatch':
-				raise InvalidSecretException()
-			elif res['errorCode'] == 'basic_auth_invalid_password':
-				raise InvalidSecretException()
-			elif res['errorCode'] == "not_found":
-				raise NotFoundException()
-			else:
-				# TODO: More decoding!
-				raise EchoException(res['errorCode'])
+			if res['result'] == 'error':
+				if res['errorCode'] == "incorrect_appkey":
+					raise InvalidOrMissingAppKeyException()
+				elif res['errorCode'] == "oauth_consumer_key_absent":
+					raise AuthorisationRequiredException()
+				elif res['errorCode'] == 'oauth_signature_mismatch':
+					raise InvalidSecretException()
+				elif res['errorCode'] == 'basic_auth_invalid_password':
+					raise InvalidSecretException()
+				elif res['errorCode'] == "not_found":
+					raise NotFoundException()
+				else:
+					# TODO: More decoding!
+					raise EchoException(res['errorCode'])
+			elif res['result'] == 'session_not_found':
+				raise InvalidSessionException()
 			
 	def decode_response(self, res):
 		if res.headers['content-type'] == 'text/xml':

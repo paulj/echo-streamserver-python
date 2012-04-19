@@ -1,0 +1,28 @@
+{
+    "poco": {
+        "startIndex": 0,
+        "itemsPerPage": 1,
+        "totalResults": 1,
+        "entry": {
+            "id": "0d2a33a98fb227778f8f200aebf7f64d",
+            "accounts": [
+                {
+                    "identityUrl": "http://example.com/users/john",
+                    "username": "John",
+                    "emails": [{
+                        "value": "john@example.com",
+                        "primary": "true"
+                    }]
+                },
+                {
+                    "openid": "http://john.foobar.com"
+                }
+            ]
+        }
+    },
+    "echo": {
+        "state": "ModeratorBanned",
+        "roles": ["administrator", "moderator"],
+        "markers": ["Good contributor"]
+    }
+}

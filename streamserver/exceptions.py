@@ -13,5 +13,8 @@ class AuthorisationRequiredException(EchoException):
 class InvalidSecretException(EchoException):
 	"""The provided Echo secret is invalid, and led to either a password rejection or invalid signature being generated"""
 	
+class InvalidSessionException(InvalidRequestException):
+	"""The provided backplane session ID was not valdi"""
+	
 class NotFoundException(EchoException):
 	"""A requested object was not found, such as a key within the KVS"""
