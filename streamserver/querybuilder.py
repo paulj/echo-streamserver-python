@@ -28,7 +28,7 @@ class CommonQueryOperations:
 		return self.add_terms("state", states)
 	
 	def type(self, *types):
-		return self.add_terms("type", states)
+		return self.add_terms("type", types)
 	
 	def source(self, *sources):
 		return self.add_terms("source", sources)
@@ -84,16 +84,19 @@ class MainQueryBuilder(RootQueryBuilder):
 		return self.add_term("sortOrder", order)
 
 	def after(self, ts):
-		return self.add_term("after", ts)
+		return self.add_term("after", self.quote_term(ts))
 
 	def before(self, ts):
-		return self.add_term("before", ts)
+		return self.add_term("before", self.quote_term(ts))
 
 	def pageAfter(self, ts):
-		return self.add_term("pageAfter", '"' + ts + '"')
+		return self.add_term("pageAfter", self.quote_term(ts))
 
 	def safeHTML(self, mode):
 		return self.add_term("safeHTML", mode)
+		
+	def quote_term(self, term):
+		return '"' + term + '"'
 		
 class SubQueryBuilder(RootQueryBuilder):
 	def __init__(self):
