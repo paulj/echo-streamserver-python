@@ -18,3 +18,12 @@ class InvalidSessionException(InvalidRequestException):
 	
 class NotFoundException(EchoException):
 	"""A requested object was not found, such as a key within the KVS"""
+	
+class EchoWaitingException(EchoException):
+	"""Echo was not able to return a response within 15 seconds of request starting time. Request should be re-run at 1 minute intervals."""
+
+class EchoTimeoutException(EchoException):
+	"""Echo failed to process the query within a reasonable amount of time"""
+	
+class InvalidQueryException(EchoException):
+	"""The provided echo query was not valid"""

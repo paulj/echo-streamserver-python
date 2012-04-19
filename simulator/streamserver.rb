@@ -44,8 +44,7 @@ end
 get '/v1/search' do
   require_parameter :q
   
-  CURRENT_SS.search(params[:appkey], params[:q], params[:since])
-  respond_json({})
+  respond_json(CURRENT_SS.search(params[:appkey], params[:q], params[:since]))
 end
 
 get '/v1/count' do
@@ -109,16 +108,15 @@ post '/v1/users/update' do
   success_result
 end
 
-error KeyNotFoundException do
-  generate_error(404, 'not_found')
-end
-error UnknownUserException do
-  generate_error(404, 'not_found')
-end
+error(KeyNotFoundException) { generate_error(404, 'not_found') }
+error(UnknownUserException) { generate_error(404, 'not_found') }
 error UnknownSessionException do
   json_header
   {:result => 'session_not_found'}.to_json
 end
+error(InvalidQueryException) { generate_error(400, 'wrong_query', env['sinatra.error'].message) }
+error(WaitingException) { generate_error(500, 'waiting') }
+error(EchoTimeoutException) { generate_error(504, 'timeout') }
 
 def json_header
   headers 'Content-Type' => 'application/x-javascript; charset="utf-8"'

@@ -82,6 +82,12 @@ class EchoClient:
 					raise InvalidSecretException()
 				elif res['errorCode'] == "not_found":
 					raise NotFoundException()
+				elif res['errorCode'] == "waiting":
+					raise EchoWaitingException()
+				elif res['errorCode'] == "wrong_query":
+					raise InvalidQueryException(res['errorMessage'])
+				elif res['errorCode'] == "timeout":
+					raise EchoTimeoutException()
 				else:
 					# TODO: More decoding!
 					raise EchoException(res['errorCode'])
