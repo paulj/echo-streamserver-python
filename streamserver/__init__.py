@@ -21,3 +21,4 @@ from .feeds_client import FeedsClient
 from .users_client import UsersClient
 from .kv_client import KVClient
 from .echo_client import (EchoAuthMethod, EchoAuthConfig)
+from .exceptions import *

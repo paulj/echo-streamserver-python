@@ -1,6 +1,7 @@
 import requests
 import json
 from oauth_hook import OAuthHook
+from .exceptions import *
 
 class EchoAuthMethod:
 	BASIC='basic'
@@ -72,6 +73,14 @@ class EchoClient:
 			res = self.decode_response(response)
 			if res['errorCode'] == "incorrect_appkey":
 				raise InvalidOrMissingAppKeyException()
+			elif res['errorCode'] == "oauth_consumer_key_absent":
+				raise AuthorisationRequiredException()
+			elif res['errorCode'] == 'oauth_signature_mismatch':
+				raise InvalidSecretException()
+			elif res['errorCode'] == 'basic_auth_invalid_password':
+				raise InvalidSecretException()
+			elif res['errorCode'] == "not_found":
+				raise NotFoundException()
 			else:
 				# TODO: More decoding!
 				raise EchoException(res['errorCode'])
@@ -81,15 +90,6 @@ class EchoClient:
 			return res.content
 		else:
 			return json.loads(res.content)
-			
-class EchoException(RuntimeError):
-	"""An exception occurred executing an Echo request"""
-	
-class InvalidRequestException(EchoException):
-	"""A request submitted to Echo was invalid"""
-
-class InvalidOrMissingAppKeyException(InvalidRequestException):
-	"""The appkey provided to echo was blank or invalid"""
 	
 class MockRequest:
 	"""A mock version of the requests.Request object that is used to drive the OAuth hook"""
