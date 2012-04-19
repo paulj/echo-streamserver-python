@@ -4,4 +4,4 @@ init:
 	env/bin/pip install -r requirements.txt
 
 test:
-	env/bin/nosetests ./tests/*
+	env/bin/nosetests ./tests/*.py
