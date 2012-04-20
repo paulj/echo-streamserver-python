@@ -7,3 +7,4 @@ basic_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret123
 oauth_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret123", method = EchoAuthMethod.OAUTH)
 invalid_basic_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret1234")
 invalid_oauth_auth = EchoAuthConfig(appkey = "test.echoenabled.com", secret = "secret1234", method = EchoAuthMethod.OAUTH)
+invalid_oauth_key_auth = EchoAuthConfig(appkey = "unknown.key", secret = "secret1234", method = EchoAuthMethod.OAUTH)

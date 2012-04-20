@@ -13,6 +13,9 @@ class AuthorisationRequiredException(EchoException):
 class InvalidSecretException(EchoException):
 	"""The provided Echo secret is invalid, and led to either a password rejection or invalid signature being generated"""
 	
+class InvalidKeyException(EchoException):
+	"""The provided Echo appkey is invalid"""
+	
 class InvalidSessionException(InvalidRequestException):
 	"""The provided backplane session ID was not valdi"""
 	

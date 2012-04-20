@@ -10,6 +10,7 @@ class ItemsClientTestSuite(unittest.TestCase):
 		self.oauth_client = KVClient(auth = cf.oauth_auth, host = cf.test_host)
 		self.invalid_basic_client = KVClient(auth = cf.invalid_basic_auth, host = cf.test_host)
 		self.invalid_oauth_client = KVClient(auth = cf.invalid_oauth_auth, host = cf.test_host)
+		self.invalid_oauth_key_client = KVClient(auth = cf.invalid_oauth_key_auth, host = cf.test_host)
 	
 	def test_put_get_basic(self):
 		self.basic_client.put('abc', '123')
@@ -26,6 +27,10 @@ class ItemsClientTestSuite(unittest.TestCase):
 	def test_put_invalid_oauth(self):
 		with self.assertRaises(InvalidSecretException):
 			self.invalid_oauth_client.put('abc', '123')
+
+	def test_put_invalid_oauth_key(self):
+		with self.assertRaises(InvalidKeyException):
+			self.invalid_oauth_key_client.put('abc', '123')
 
 	def test_put_invalid_basic(self):
 		with self.assertRaises(InvalidSecretException):

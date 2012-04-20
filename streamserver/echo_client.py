@@ -76,6 +76,8 @@ class EchoClient:
 					raise InvalidOrMissingAppKeyException()
 				elif res['errorCode'] == "oauth_consumer_key_absent":
 					raise AuthorisationRequiredException()
+				elif res['errorCode'] == "oauth_consumer_key_not_found":
+					raise InvalidKeyException()
 				elif res['errorCode'] == 'oauth_signature_mismatch':
 					raise InvalidSecretException()
 				elif res['errorCode'] == 'basic_auth_invalid_password':
