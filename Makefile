@@ -5,3 +5,6 @@ init:
 
 test:
 	env/bin/nosetests ./tests/*.py
+
+doc:
+	(cd docs; make html)
