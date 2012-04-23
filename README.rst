@@ -69,9 +69,7 @@ To develop on the library, execute the following to configure your local environ
     
 To execute the unit tests, first start a simulator server. Note that you'll need Ruby 1.9 and Bundler installed.
 
-    cd simulator
-    bundle install
-    ruby streamserver.rb
+    cd simulator; bundle install; ruby streamserver.rb
     
 Then execute the tests by running:
 
