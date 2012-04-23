@@ -108,6 +108,41 @@ post '/v1/users/update' do
   success_result
 end
 
+get '/v1/feeds/list' do
+  require_auth
+  
+  headers 'Content-Type' => 'text/xml'
+  <<-EOX
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+    <head>
+        <title>Feeds for example.com</title>
+    </head>
+    <body>
+        <outline text="http://example.com/feed/1" type="atom" xmlUrl="http://example.com/feed/1" refreshRate="300"/>
+        <outline text="http://example.com/feed/2" type="atom" xmlUrl="http://example.com/feed/2" refreshRate="50"/>
+    </body>
+</opml>
+EOX
+end
+
+get '/v1/feeds/register' do
+  require_parameter :url, :interval
+  require_auth
+  
+  success_result
+end
+
+get '/v1/feeds/unregister' do
+  require_parameter :url
+  require_auth
+  
+  generate_error(400, 'incorrect_url') if params[:url] == 'foo'
+  
+  success_result
+end
+
+
 error(KeyNotFoundException) { generate_error(404, 'not_found') }
 error(UnknownUserException) { generate_error(404, 'not_found') }
 error UnknownSessionException do

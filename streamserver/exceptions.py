@@ -30,3 +30,6 @@ class EchoTimeoutException(EchoException):
 	
 class InvalidQueryException(EchoException):
 	"""The provided echo query was not valid"""
+
+class IncorrectURLException(EchoException):
+	"""The URL provided was incorrect."""

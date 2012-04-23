@@ -90,6 +90,8 @@ class EchoClient:
 					raise InvalidQueryException(res['errorMessage'])
 				elif res['errorCode'] == "timeout":
 					raise EchoTimeoutException()
+				elif res['errorCode'] == "incorrect_url":
+					raise IncorrectURLException()
 				else:
 					# TODO: More decoding!
 					raise EchoException(res['errorCode'])
